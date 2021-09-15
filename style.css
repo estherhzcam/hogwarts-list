@@ -24,16 +24,18 @@ main {
 
 #filter {
     display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    max-width: 500px;
-    margin: 1em 0;
+    flex-direction: column;
+    margin-bottom: 1em;
 }
+
+#selectfilter {
+   width: 30% ;
+}
+
 
 table{
     width: 80%;
     text-align: left;
- 
 }
 
 .hidden{

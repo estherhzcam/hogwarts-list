@@ -11,24 +11,18 @@
     <header><img src="" alt="Hogwarts crest"><h1>Hogwarts Students List</h1></header>
     <main>
         <section id="search"><p>Search</p><input type="search"></section>
-        <section id="filter">
-            <select id="houseFilter">
-                <option value="filterbyHouse">Filter by House</option>
-                <option value="gryffindor">Gryffindor</option>
-                <option value="hafflepuff">Hafflepuff</option>
-                <option value="ravenclaw">Ravenclaw</option>
-                <option value="slytherin">Slytherin</option>
-              </select>
-              <select id="respoFilter">
-                <option value="filterbyrespo">Filter by responsabilities</option>
-                <option value="prefect">Prefect</option>
-                <option value="quidditch">Quidditch team member</option>
-                <option value="inquisitorial">Inquisitorial Squad member</option>
-              </select>
-              <select id="expelledFilter">
-                <option value="filterbyExpelled">Filter if expelled</option>
-                <option value="exp">Expelled</option>
-                <option value="nonExp">NonExpelled</option>
+        <section id="filter"><p>Filter by</p>
+            <select name="selectfilter" id="selectfilter">
+                <option value="allstudents">All students</option>
+                <option value="gryffindor">Gryffindor students</option>
+                <option value="hafflepuff">Hafflepuff students</option>
+                <option value="ravenclaw">Ravenclaw students</option>
+                <option value="slytherin">Slytherin students</option>
+                <option value="prefect">Prefect students</option>
+                <option value="quidditch">Quidditch team members</option>
+                <option value="inquisitorial">Inquisitorial Squad members</option>
+                <option value="exp">Expelled students</option>
+                <option value="nonexp">NonExpelled students</option>
               </select>
         </section>
             <table id="displayList">

@@ -10,16 +10,35 @@ const Student = {
     image: "",
     house: "",
 };
+//stablish filter and sorting settings to use later
+const settings = {
+    filter : "all",
+    sortBy : "name",
+    sortDir : "asc"
+}
 
 document.addEventListener("DOMContentLoaded", start)
 
 function start(){
+    getFilters();
     fetch("https://petlatkea.dk/2021/hogwarts/students.json")
     .then((response) => response.json())
     .then((data) => treatJsonData(data))
     .then(function(data){displayStudentsList(listOfStudents)})
 }
 //add event listeners for filters
+
+function getFilters(){
+    console.log( "getting filters")
+    document.querySelector("select").addEventListener("click", selectFilter)
+}
+
+function selectFilter(){
+    let filter = document.querySelector("#selectfilter").value;
+    settings.filter = filter
+    buildList()
+}
+
 
 
 function treatJsonData(data){
@@ -137,8 +156,50 @@ function getImage(fullname){
     }
 }
 
+function buildList(){
+    const currentList = filterList(listOfStudents)
+    displayStudentsList(currentList)
+}
+
+function filterList(listOfStudents) {
+    let filteredList = listOfStudents
+    if (settings.filter === "gryffindor"){
+       filteredList = listOfStudents.filter(isGriffindor);
+       function isGriffindor(student){return student.house === "Gryffindor"}
+    }
+    else if (settings.filter === "hafflepuff"){console.log(settings.filter)
+        filteredList = listOfStudents.filter(isHufflepuff);
+        function isHufflepuff(student){return student.house === "Hufflepuff"}}
+    else if (settings.filter === "ravenclaw"){console.log(settings.filter)
+        filteredList = listOfStudents.filter(isRavenclaw);
+        function isRavenclaw(student){return student.house === "Ravenclaw"}}
+    else if (settings.filter === "slytherin"){console.log(settings.filter)
+        filteredList = listOfStudents.filter(isSlytherin);
+        function isSlytherin(student){return student.house === "Slytherin"}}
+    else if (settings.filter === "prefect"){console.log(settings.filter)
+        filteredList = listOfStudents.filter(isPrefect);
+        function isPrefect(student){return student.resp === "Prefect"}}
+    else if (settings.filter === "quidditch"){console.log(settings.filter);
+        filteredList = listOfStudents.filter(isQuidditch);
+        function isQuidditch(student){return student.resp === "Quidditch"}}
+    else if (settings.filter === "inquisitorial"){console.log(settings.filter);
+        filteredList = listOfStudents.filter(isInquisitorial);
+        function isInquisitorial(student){return student.resp === "Inquisitorial Squad"}}
+    else if (settings.filter === "exp"){console.log(settings.filter);
+        filteredList = listOfStudents.filter(isExpelled);
+        function isExpelled(student){return student.expelled === true}}
+    else if (settings.filter === "nonexp"){console.log(settings.filter);
+        filteredList = listOfStudents.filter(isNonExpelled);
+        function isNonExpelled(student){return student.expelled === false}}
+    else if (settings.filter === "allstudents"){console.log(settings.filter)}
+    console.log("this is the filtered list", filteredList)
+    return filteredList
+}
+
 function displayStudentsList(students) {
-    console.log(students);
+    console.log("this is the list of students to display", students);
+    //clear the list
+    document.querySelector("tbody").innerHTML = "";
    students.forEach(showStudent)}
 
 function showStudent(student) {
