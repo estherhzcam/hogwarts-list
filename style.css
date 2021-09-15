@@ -1,0 +1,58 @@
+header {
+    display: grid; 
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr 1fr;
+    justify-items: center;
+    padding: 2em
+}
+
+main {
+    margin: 3em
+}
+
+#search {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    grid-template-rows: 1fr;
+    align-items: baseline;
+    max-width: 250px;
+}
+
+#search input {
+ max-height: 2em;
+}
+
+#filter {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    max-width: 500px;
+    margin: 1em 0;
+}
+
+table{
+    width: 80%;
+    text-align: left;
+ 
+}
+
+.hidden{
+    display: none
+}
+
+table tr:nth-child(odd) {
+   background-color: rgba(218, 217, 216, 0.486);
+}
+
+th{
+    background-color: rgba(20, 95, 194, 0.568);
+    color:white;
+    padding:0.5em;
+    text-align: center;
+}
+td{
+    border-collapse: collapse;
+    padding: 0.5em;
+    text-align: center;
+}
+

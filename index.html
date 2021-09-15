@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cleaning Hogwarts Data Document</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header><img src="" alt="Hogwarts crest"><h1>Hogwarts Students List</h1></header>
+    <main>
+        <section id="search"><p>Search</p><input type="search"></section>
+        <section id="filter">
+            <select id="houseFilter">
+                <option value="filterbyHouse">Filter by House</option>
+                <option value="gryffindor">Gryffindor</option>
+                <option value="hafflepuff">Hafflepuff</option>
+                <option value="ravenclaw">Ravenclaw</option>
+                <option value="slytherin">Slytherin</option>
+              </select>
+              <select id="respoFilter">
+                <option value="filterbyrespo">Filter by responsabilities</option>
+                <option value="prefect">Prefect</option>
+                <option value="quidditch">Quidditch team member</option>
+                <option value="inquisitorial">Inquisitorial Squad member</option>
+              </select>
+              <select id="expelledFilter">
+                <option value="filterbyExpelled">Filter if expelled</option>
+                <option value="exp">Expelled</option>
+                <option value="nonExp">NonExpelled</option>
+              </select>
+        </section>
+            <table id="displayList">
+                <thead>
+            <tr id="sorting">
+                <th data-action="sort" data-sort-direction="asc" data-sort="firstName">First Name</th>
+                <th data-action="sort" data-sort-direction="asc" data-sort="middleName">Middle Name</th>
+                <th data-action="sort" data-sort-direction="asc" data-sort="lastName">Last Name</th>
+                <th data-action="sort" data-sort-direction="asc" data-sort="nickName">Nick Name</th>
+                <th data-action="sort" data-sort-direction="asc" data-sort="house">House</th>
+                <th data-action="sort" data-sort-direction="asc" data-sort="responsabilites">Responsabilites</th>
+            </tr>
+            </thead>
+            <tbody>
+              <!-- students template will be copied and inserted here -->
+            </tbody>
+          </table>
+            <template id="listOfStudents">
+                <tr>
+                    <td data-field="firstName">First Name</td>
+                    <td data-field="middleName">Middle Name</td>
+                    <td data-field="lastName">Last Name</td>
+                    <td data-field="nickName">Nick Name</td>
+                    <td data-field="house">House</td>
+                    <td data-field="responsabilites">Responsabilites</td>
+                  </tr>
+            </template>
+            <div class ="hidden" id="pop-up">
+                <img src="" alt="house crest" id="houseCrest">
+                <p id="close">X</p>
+                <img src="" alt="student picture" id="studentPicture">
+                <div id="studentData">
+                    <p id="fullName">Harry Potter</p>
+                    <p id="nickName">-</p>
+                    <p id="bloodStatus">Half-blood</p>
+                    <p id="prefect">No</p>
+                    <p id="expelled">No</p>
+                    <p id="inqSquad">No</p>
+                    </div>
+                <div id="buttons"><button id="expell">Expel</button><button id="makePrefect">Make prefect</button><button id="appointInqSquad">Appoint for the Inquisitorial Squad</button></div>
+            </div>
+        </section>
+        <footer></footer>
+    </main>
+    <script src="script.js"></script>
+</body>
+</html>
