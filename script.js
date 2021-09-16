@@ -264,5 +264,34 @@ function showStudent(student) {
     else{clone.querySelector("[data-field='nickName']").textContent = "-"}
     clone.querySelector("[data-field='house']").textContent = student.house;
     clone.querySelector("[data-field='responsabilites']").textContent = "-";
-    document.querySelector("#displayList tbody").appendChild(clone)
+// add event listener display pop up
+    clone.querySelector("[data-field='firstName']").addEventListener("click", showPopUp)
+
+    document.querySelector("#displayList tbody").appendChild(clone);
+    
+    function showPopUp(){
+        //clean middle name if null
+        //clean picture if null
+        console.log(student)
+        document.querySelector("#pop-up").classList.remove("hidden");
+        document.querySelector("#pop-up").classList.add("show");
+
+        document.querySelector("#studentData p:first-of-type").textContent = `${student.firstName} ${student.middleName} ${student.lastName}`
+        document.querySelector("#studentpicture").src = student.image
+        if (student.house === "Gryffindor"){document.querySelector("#housecrest").src ="images/gryffindor-house-crest.svg"}
+        else if (student.house === "Hufflepuff"){document.querySelector("#housecrest").src ="images/hufflepuff-house-crest.svg"}
+        else if (student.house === "Ravenclaw"){document.querySelector("#housecrest").src ="images/ravenclaw-house-crest.svg"}
+        else if (student.house === "Slytherin"){document.querySelector("#housecrest").src ="images/slytherin-house-crest.svg"}
+        document.querySelector("#content-popup #close").addEventListener("click", closePopUp)
+    }
+    function closePopUp(){
+        document.querySelector("#pop-up").classList.remove("show");
+        document.querySelector("#pop-up").classList.add("hidden");
+        document.querySelector("#content-popup #close").removeEventListener("click", closePopUp);
+
+    }
+
+
+
+
 }

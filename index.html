@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <header><img src="" alt="Hogwarts crest"><h1>Hogwarts Students List</h1></header>
+    <header><img src="images/hogwarts-crest.png" alt="Hogwarts crest, This file is licensed under the Creative Commons Attribution-Share Alike 4.0 International license."><h1>Hogwarts Students List</h1></header>
     <main>
         <section id="search"><p>Search</p><input type="search"></section>
         <section id="filter"><p>Filter by</p>
@@ -50,21 +50,23 @@
                     <td data-field="responsabilites">Responsabilites</td>
                   </tr>
             </template>
-            <div class ="hidden" id="pop-up">
-                <img src="" alt="house crest" id="houseCrest">
+            <div id="pop-up" class ="hidden">
+                <section id="content-popup">
+                <img src="" alt="house crest" id="housecrest">
                 <p id="close">X</p>
-                <img src="" alt="student picture" id="studentPicture">
+                <img src="" alt="student picture" id="studentpicture">
                 <div id="studentData">
-                    <p id="fullName">Harry Potter</p>
-                    <p id="nickName">-</p>
-                    <p id="bloodStatus">Half-blood</p>
-                    <p id="prefect">No</p>
-                    <p id="expelled">No</p>
-                    <p id="inqSquad">No</p>
+                    <p id="fullName"><span>Full name: </span>Harry Potter</p>
+                    <p id="nickName"><span>Nick name: </span>-</p>
+                    <p id="bloodStatus"><span>Blood status: </span>Half-blood</p>
+                    <p id="prefect"><span>Prefect: </span>No</p>
+                    <p id="expelled"><span>Expelled: </span>No</p>
+                    <p id="inqSquad"><span>Inquisitorial Squad: </span>No</p>
                     </div>
                 <div id="buttons"><button id="expell">Expel</button><button id="makePrefect">Make prefect</button><button id="appointInqSquad">Appoint for the Inquisitorial Squad</button></div>
+            </section>
             </div>
-        </section>
+      
         <footer></footer>
     </main>
     <script src="script.js"></script>
