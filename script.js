@@ -13,7 +13,7 @@ const Student = {
 //stablish filter and sorting settings to use later
 const settings = {
     filter : "all",
-    sortBy : "name",
+    sortBy : "firstName",
     sortDir : "asc"
 }
 
@@ -30,7 +30,8 @@ function start(){
 
 function getFilters(){
     console.log( "getting filters")
-    document.querySelector("select").addEventListener("click", selectFilter)
+    document.querySelector("select").addEventListener("click", selectFilter);
+    document.querySelectorAll("[data-action='sort']").forEach(button => button.addEventListener("click", selectSorting))
 }
 
 function selectFilter(){
@@ -38,6 +39,34 @@ function selectFilter(){
     settings.filter = filter
     buildList()
 }
+
+
+function selectSorting(event){ 
+    const sortBy = event.target.dataset.sort;
+    const sortDir = event.target.dataset.sortDirection;
+    // find old sortBy elem
+    const oldElement = document.querySelector(`[data-sort='${settings.sortBy}']`);
+   console.log(oldElement)
+   oldElement.classList.remove("sortby")
+    // indicate active sorting
+event.target.classList.add("sortby");
+console.log("firts sort dir is ", sortDir)
+    if (sortDir === "asc"){
+        event.target.dataset.sortDirection = "desc"
+    }
+    else if (sortDir === "desc") { event.target.dataset.sortDirection = "asc"}
+    console.log("then sort dir is ", sortDir)
+    setSort(sortBy, sortDir)
+}
+
+function setSort(sortBy, sortDir){
+    settings.sortBy = sortBy;
+    settings.sortDir = sortDir;
+    buildList()
+}
+
+
+
 
 
 
@@ -157,9 +186,26 @@ function getImage(fullname){
 }
 
 function buildList(){
-    const currentList = filterList(listOfStudents)
-    displayStudentsList(currentList)
+    const currentList = filterList(listOfStudents);
+    const sortedList = sortList(currentList)
+    displayStudentsList(sortedList)
 }
+
+function sortList(currentList){
+    let direction = 1;
+    let sortedList = currentList
+    if (settings.sortDir === "desc"){
+        direction = -1    }
+        else{direction = 1}
+    sortedList = sortedList.sort(sortByParam)
+    function sortByParam (studentA, studentB){
+        if(studentA[settings.sortBy] < studentB[settings.sortBy]){
+            return -1 * direction}
+        else{return 1 * direction}}
+    console.log(sortedList)
+    return sortedList
+}
+
 
 function filterList(listOfStudents) {
     let filteredList = listOfStudents
@@ -194,6 +240,10 @@ function filterList(listOfStudents) {
     else if (settings.filter === "allstudents"){console.log(settings.filter)}
     console.log("this is the filtered list", filteredList)
     return filteredList
+}
+
+function sortingList(currentList) {
+
 }
 
 function displayStudentsList(students) {
