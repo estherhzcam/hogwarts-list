@@ -15,6 +15,14 @@ const Student = {
     inquisitorial: false,
     bloodStatus: "",
 };
+
+const Responsabilities = {
+    prefect: false,
+    quidditch: false,
+    inquisitorial: false,
+}
+
+
 //stablish filter and sorting settings to use later
 const settings = {
     filter : "all",
@@ -229,13 +237,13 @@ function filterList(listOfStudents) {
         function isSlytherin(student){return student.house === "Slytherin"}}
     else if (settings.filter === "prefect"){console.log(settings.filter)
         filteredList = listOfStudents.filter(isPrefect);
-        function isPrefect(student){return student.resp === "Prefect"}}
+        function isPrefect(student){return student.prefect === true}}
     else if (settings.filter === "quidditch"){console.log(settings.filter);
         filteredList = listOfStudents.filter(isQuidditch);
-        function isQuidditch(student){return student.resp === "Quidditch"}}
+        function isQuidditch(student){return student.quidditch === true}}
     else if (settings.filter === "inquisitorial"){console.log(settings.filter);
         filteredList = listOfStudents.filter(isInquisitorial);
-        function isInquisitorial(student){return student.resp === "Inquisitorial Squad"}}
+        function isInquisitorial(student){return student.inquisitorial === true}}
     else if (settings.filter === "exp"){console.log(settings.filter);
         filteredList = listOfStudents.filter(isExpelled);
         function isExpelled(student){return student.expelled === true}}
@@ -247,10 +255,6 @@ function filterList(listOfStudents) {
     return filteredList
 }
 
-function sortingList(currentList) {
-
-}
-
 function displayStudentsList(students) {
     console.log("this is the list of students to display", students);
     //clear the list
@@ -258,7 +262,8 @@ function displayStudentsList(students) {
    students.forEach(showStudent)}
 
 function showStudent(student) {
-    //
+
+    //copy template, populate, append
     const clone = document.querySelector("template").content.cloneNode(true);
     clone.querySelector("[data-field='firstName']").textContent = student.firstName;
     if (student.middleName != null){clone.querySelector("[data-field='middleName']").textContent = student.middleName}
@@ -268,7 +273,23 @@ function showStudent(student) {
     if (student.nickName != null){clone.querySelector("[data-field='nickName']").textContent = student.nickName}
     else{clone.querySelector("[data-field='nickName']").textContent = "-"}
     clone.querySelector("[data-field='house']").textContent = student.house;
-    clone.querySelector("[data-field='responsabilites']").textContent = "-";
+    // responsabilities display
+    if (student.prefect === true && student.quidditch === true && student.inquisitorial === true){
+    clone.querySelector("[data-field='responsabilites']").textContent = "Prefect, Quidditch team member, Inquisitorial squad"}
+    else if (student.prefect === true && student.quidditch === true){
+    clone.querySelector("[data-field='responsabilites']").textContent = "Prefect, Quidditch team member"}
+    else if (student.prefect === true && student.inquisitorial === true){
+        clone.querySelector("[data-field='responsabilites']").textContent = "Prefect, Inquisitorial squad"}
+    else if (student.quidditch === true && student.inquisitorial === true){
+        clone.querySelector("[data-field='responsabilites']").textContent = "Quidditch team member, Inquisitorial squad"}
+    else if (student.quidditch === true){
+            clone.querySelector("[data-field='responsabilites']").textContent = "Quidditch team member"}
+    else if (student.prefect === true){
+                clone.querySelector("[data-field='responsabilites']").textContent = "Prefect"}
+    else if (student.inquisitorial === true){
+                    clone.querySelector("[data-field='responsabilites']").textContent = "Inquisitorial squad member"}
+    else {clone.querySelector("[data-field='responsabilites']").textContent = "None";}
+
 // add event listener display pop up
     clone.querySelector("[data-field='firstName']").addEventListener("click", showPopUp)
 
@@ -280,6 +301,8 @@ function showStudent(student) {
         console.log(student)
         document.querySelector("#pop-up").classList.remove("hidden");
         document.querySelector("#pop-up").classList.add("show");
+
+        //populate depending on the student info
 
         if (student.middleName != null){document.querySelector("#studentData p:first-of-type span").textContent = `${student.firstName} ${student.middleName} ${student.lastName}`}
         else {
@@ -294,16 +317,42 @@ function showStudent(student) {
         else if (student.house === "Hufflepuff"){document.querySelector("#housecrest").src ="images/hufflepuff-house-crest.svg"}
         else if (student.house === "Ravenclaw"){document.querySelector("#housecrest").src ="images/ravenclaw-house-crest.svg"}
         else if (student.house === "Slytherin"){document.querySelector("#housecrest").src ="images/slytherin-house-crest.svg"}
+        if(student.prefect === true){document.querySelector("p#prefect span").textContent = "Yes"}
+        else {document.querySelector("p#prefect span").textContent = "No"}
+        if (student.inquisitorial === true){document.querySelector("p#inquisitorial span").textContent = "Yes"}
+        else{document.querySelector("p#inquisitorial span").textContent = "No"}
+
+        //buttons 
+
         document.querySelector("#content-popup #close").addEventListener("click", closePopUp)
+        document.querySelector("#expell").addEventListener("click", expellStudent)
+        document.querySelector("#makeprefect").addEventListener("click", makePrefect)
+        document.querySelector("#appoint-inq-squad").addEventListener("click", appointInquisitorial)
+
+        //buttons functions
+        function expellStudent(){
+        console.log("expellStudent")
+        if(student.expelled === false){student.expelled = true; document.querySelector("p#expelled span").textContent = "Yes"}
+        else{student.expelled = false; document.querySelector("p#expelled span").textContent = "No"}
+        buildList()
     }
+
+        function makePrefect(){console.log("makePrefect")
+        if(student.prefect === false){student.prefect = true; document.querySelector("p#prefect span").textContent = "Yes"}
+        else{student.prefect = false; document.querySelector("p#prefect span").textContent = "No"}
+        buildList()
+    }
+        function appointInquisitorial(){
+        console.log("appointInquisitorial")
+        if(student.inquisitorial === false){student.inquisitorial = true; document.querySelector("p#inquisitorial span").textContent = "Yes"}
+        else{student.inquisitorial = false; document.querySelector("p#inquisitorial span").textContent = "No"}
+        buildList()
+    }
+    
+}
+}
+
     function closePopUp(){
         document.querySelector("#pop-up").classList.remove("show");
         document.querySelector("#pop-up").classList.add("hidden");
-        document.querySelector("#content-popup #close").removeEventListener("click", closePopUp);
-
-    }
-
-
-
-
-}
+        document.querySelector("#content-popup #close").removeEventListener("click", closePopUp)}
