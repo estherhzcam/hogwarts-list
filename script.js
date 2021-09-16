@@ -9,6 +9,11 @@ const Student = {
     nickName: "",
     image: "",
     house: "",
+    prefect: false,
+    expelled: false,
+    quidditch: false,
+    inquisitorial: false,
+    bloodStatus: "",
 };
 //stablish filter and sorting settings to use later
 const settings = {
@@ -276,8 +281,15 @@ function showStudent(student) {
         document.querySelector("#pop-up").classList.remove("hidden");
         document.querySelector("#pop-up").classList.add("show");
 
-        document.querySelector("#studentData p:first-of-type").textContent = `${student.firstName} ${student.middleName} ${student.lastName}`
-        document.querySelector("#studentpicture").src = student.image
+        if (student.middleName != null){document.querySelector("#studentData p:first-of-type span").textContent = `${student.firstName} ${student.middleName} ${student.lastName}`}
+        else {
+            if (student.lastName != null){document.querySelector("#studentData p:first-of-type span").textContent = `${student.firstName} ${student.lastName}`}
+            else {document.querySelector("#studentData p:first-of-type span").textContent = student.firstName}
+        }
+        if (student.nickName != null){document.querySelector("p#nickName span").textContent = student.nickName}
+        else {document.querySelector("p#nickName span").textContent = "N/A"}
+        if (student.image != null) {document.querySelector("#studentpicture").src = student.image}
+        else {document.querySelector("#studentpicture").src = "images/empty_image.png"}
         if (student.house === "Gryffindor"){document.querySelector("#housecrest").src ="images/gryffindor-house-crest.svg"}
         else if (student.house === "Hufflepuff"){document.querySelector("#housecrest").src ="images/hufflepuff-house-crest.svg"}
         else if (student.house === "Ravenclaw"){document.querySelector("#housecrest").src ="images/ravenclaw-house-crest.svg"}

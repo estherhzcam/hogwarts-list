@@ -164,6 +164,7 @@ td{
 #content-popup #buttons>*{
     background-color: rgb(168, 126, 11);  
     border-radius: 10%;
-    color:white
+    color:white;
+    cursor:pointer
 }
 
