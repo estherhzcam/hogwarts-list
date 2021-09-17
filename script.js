@@ -467,6 +467,13 @@ function showStudent(student) {
           document.querySelector("p#inquisitorial span").textContent = "No";
         }
 
+        if (student.expelled === true) {
+          document.querySelector("#expell").classList.add("dissabled");
+          document.querySelector("p#expelled span").textContent = "Yes";
+        } else {
+          document.querySelector("p#expelled span").textContent = "No";
+        }
+
         // display blood status
         document.querySelector("p#bloodStatus span").textContent = student.bloodStatus;
         //Add event listeners to buttons in the popUp
@@ -482,6 +489,8 @@ function showStudent(student) {
           if (student.expelled === false) {
             student.expelled = true;
             document.querySelector("#expell").removeEventListener("click", expellStudent);
+            document.querySelector("#expell").classList.add("dissabled");
+            document.querySelector("p#expelled span").textContent = "Yes";
             //add inactive button class
           }
         }
@@ -497,7 +506,7 @@ function showStudent(student) {
               let prefectsSameHouse = prefectsList.filter(areSameHouse);
               console.log("this are the prefects from same house", prefectsSameHouse)
               function areSameHouse(prefect) {
-                return prefect.house === student.house;
+                  return prefect.house === student.house;
               }
               if (prefectsSameHouse.length > 1) {
                 console.log("student cannot be made a prefect, there are already two in their house");
@@ -529,8 +538,18 @@ function showStudent(student) {
         function appointInquisitorial() {
           console.log("appointInquisitorial");
           if (student.inquisitorial === false) {
-            student.inquisitorial = true;
-            document.querySelector("p#inquisitorial span").textContent = "Yes";
+            if (student.bloodStatus === "pureblood") {
+              student.inquisitorial = true;
+              document.querySelector("p#inquisitorial span").textContent = "Yes";
+            } else {
+              if (student.house === "Slytherin") {
+                student.inquisitorial = true;
+                document.querySelector("p#inquisitorial span").textContent = "Yes";
+              } else {
+                document.querySelector("#appoint-inq-squad").classList.add("dissabled");
+                document.querySelector("#warning-message p").textContent = "(!) This student is not a pureblood and cannot be part of the Inquisitorial Squad";
+              }
+            }
           } else {
             student.inquisitorial = false;
             document.querySelector("p#inquisitorial span").textContent = "No";
@@ -542,8 +561,13 @@ function showStudent(student) {
             document.querySelector("#pop-up").classList.add("hidden");
             document.querySelector("#content-popup #close").removeEventListener("click", closePopUp);
             document.querySelector("#makeprefect").removeEventListener("click", makePrefect);
-            document.querySelector("#makeprefect").classList.remove("dissabled")
+            document.querySelector("#makeprefect").classList.remove("dissabled");
+            document.querySelector("#appoint-inq-squad").classList.remove("dissabled")
             document.querySelector("#warning-message p").textContent = "";
+            document.querySelector("#expell").classList.remove("dissabled");
+            document.querySelector("#expell").removeEventListener("click", expellStudent);
+            document.querySelector("#appoint-inq-squad").removeEventListener("click", appointInquisitorial);
+
             buildList()
             }
     
