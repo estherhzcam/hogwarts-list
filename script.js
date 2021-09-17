@@ -16,7 +16,12 @@ const Student = {
     bloodStatus: "",
 };
 
+// setting prefects list to host a list of students being prefects at any given time
 const prefectsList = [];
+
+//setting pure and half blood lists to check if a student can be appointed for inquisitorial squad
+let pureBloodList;
+let halfBloodList;
 
 
 //stablish filter and sorting settings to use later
@@ -30,6 +35,7 @@ document.addEventListener("DOMContentLoaded", start);
 
 function start(){
     getFilters();
+    getBloodTypes();
     fetch("https://petlatkea.dk/2021/hogwarts/students.json")
     .then((response) => response.json())
     .then((data) => treatJsonData(data))
@@ -74,8 +80,22 @@ function setSort(sortBy, sortDir){
     buildList();
 }
 
+function getBloodTypes(){
+    fetch("https://petlatkea.dk/2021/hogwarts/families.json")
+    .then((response) => response.json())
+    .then((data) => treatBloodData(data))
+}
+function treatBloodData(data){
+   
+    pureBloodList = data.pure;
+    console.log("pure blood list", pureBloodList);
+    halfBloodList = data.half;
+    console.log("half blood list", halfBloodList);
+    
+}
 
 function treatJsonData(data){
+  
     data.forEach((stud) => {
     //copy the object prototype as many times as json objects there are
     const student = Object.create(Student);
@@ -95,6 +115,7 @@ function treatJsonData(data){
     student.prefect = false;
     student.quidditch = false;
     student.inquisitorial = false;
+    student.bloodStatus = calculateBloodStatus(student.lastName)
     //push object into empty array
     listOfStudents.push(student);
     })
@@ -191,6 +212,27 @@ function getImage(fullname){
     else {
         return null;
     }
+}
+
+function calculateBloodStatus(lastName) {
+    console.log(lastName);
+    if (pureBloodList.some(elem => elem === lastName) && halfBloodList.some(elem => elem === lastName))  {
+        console.log("surname is in both pure and halfblood lists");
+        return "halfblood"
+    }
+    else if(pureBloodList.some(elem => elem === lastName)){
+        console.log("surname is in pure-blood list");
+        return "pureblood"
+    }
+    else if(halfBloodList.some(elem => elem === lastName)){
+        console.log("surname is in half-blood list");
+        return "halfblood"
+    }
+    else {
+        console.log("surname is in half-blood list");
+        return "mudblood"
+    }
+    
 }
 
 function buildList(){
@@ -425,6 +467,8 @@ function showStudent(student) {
           document.querySelector("p#inquisitorial span").textContent = "No";
         }
 
+        // display blood status
+        document.querySelector("p#bloodStatus span").textContent = student.bloodStatus;
         //Add event listeners to buttons in the popUp
 
         document.querySelector("#content-popup #close").addEventListener("click", closePopUp);
