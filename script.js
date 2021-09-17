@@ -437,27 +437,47 @@ function showStudent(student) {
           console.log("expellStudent");
           if (student.expelled === false) {
             student.expelled = true;
+            document.querySelector("#expell").removeEventListener("click", expellStudent);
+            //add inactive button class
           }
         }
 
-        //Issue, prefect status not remaining when appointing another student
+     
         function makePrefect() {
-            console.log("name is", student.firstName);
-          console.log("before", student.prefect);
           //if student is not a prefect, check if there is another prefect in the same house
 
           if (student.prefect === false) {
-           /*  if (prefectsList.some((prefect) => prefect.house === student.house)) {
+            if (prefectsList.some((prefect) => prefect.house === student.house)) {
               //there is at least one other prefect in the same house. Check how many.
-            } else { */
+              console.log("There is another prefect from the same house", prefectsList);
+              let prefectsSameHouse = prefectsList.filter(areSameHouse);
+              console.log("this are the prefects from same house", prefectsSameHouse)
+              function areSameHouse(prefect) {
+                return prefect.house === student.house;
+              }
+              if (prefectsSameHouse.length > 1) {
+                console.log("student cannot be made a prefect, there are already two in their house");
+                document.querySelector("#makeprefect").classList.add("dissabled")
+                document.querySelector("#warning-message p").textContent = "(!) There are already two  prefects in the student's house. Please remove one to make this student a prefect";
+              } else {
+                console.log("student can be made a prefect");
+                student.prefect = true;
+                document.querySelector("p#prefect span").textContent = "Yes";
+                prefectsList.push(student);
+              }
+            } else {
               student.prefect = true;
               document.querySelector("p#prefect span").textContent = "Yes";
-              //prefectsList.push(student);
+              prefectsList.push(student);              
             }
-           else {
+            //if student is a prefect, just remove the prefect status
+          } else {
             student.prefect = false;
             document.querySelector("p#prefect span").textContent = "No";
-            //console.log("the student is in the list at index", prefectsList.indexOf(student));
+            //check the index of the student in the prefects list and remove him from it
+            let studentPrefectsIndex = prefectsList.indexOf(student);
+            prefectsList.splice(studentPrefectsIndex, 1);
+            console.log(prefectsList);
           }
         }
 
@@ -478,6 +498,8 @@ function showStudent(student) {
             document.querySelector("#pop-up").classList.add("hidden");
             document.querySelector("#content-popup #close").removeEventListener("click", closePopUp);
             document.querySelector("#makeprefect").removeEventListener("click", makePrefect);
+            document.querySelector("#makeprefect").classList.remove("dissabled")
+            document.querySelector("#warning-message p").textContent = "";
             buildList()
             }
     

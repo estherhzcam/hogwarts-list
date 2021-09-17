@@ -161,10 +161,22 @@ td{
     
 }
 
-#content-popup #buttons>*{
+#content-popup #buttons > * {
     background-color: rgb(168, 126, 11);  
     border-radius: 10%;
     color:white;
-    cursor:pointer
+    cursor:pointer;
+    padding: 0.5em;
+    text-align:center;
 }
 
+.dissabled {
+    filter: grayscale(70%);
+    cursor: none;
+}
+
+#warning-message{
+    grid-column: 1/3;
+    grid-row: 4;
+    font-size: small;
+}
