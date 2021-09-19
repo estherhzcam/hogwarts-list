@@ -19,6 +19,8 @@ const Student = {
 // setting prefects list to host a list of students being prefects at any given time
 const prefectsList = [];
 
+// setting array for students included in the search
+let searchOfStudents = []
 //setting pure and half blood lists to check if a student can be appointed for inquisitorial squad
 let pureBloodList;
 let halfBloodList;
@@ -47,6 +49,7 @@ function getFilters(){
 
     document.querySelector("select").addEventListener("click", selectFilter);
     document.querySelectorAll("[data-action='sort']").forEach(button => button.addEventListener("click", selectSorting));
+    document.querySelector("form").addEventListener("submit", processSearch);
 }
 
 function selectFilter(){
@@ -78,6 +81,27 @@ function setSort(sortBy, sortDir){
     settings.sortBy = sortBy;
     settings.sortDir = sortDir;
     buildList();
+}
+
+function processSearch(e){
+  e.preventDefault();
+  searchOfStudents = []
+  let search = document.querySelector("input[name=searchfield]").value.toLowerCase();
+  listOfStudents.forEach((student)=>{
+ 
+    let studentName = student.firstName.toLowerCase();
+    //let studentSurname = student.lastName.toLowerCase();
+
+    if(studentName.includes(search) === true) {
+      searchOfStudents.push(student);
+    }
+    else if(student.lastName) {
+      let studentSurname = student.lastName.toLowerCase();
+      if (studentSurname.includes(search) === true) {
+      searchOfStudents.push(student);
+    }}
+  })
+  displayStudentsList(searchOfStudents)
 }
 
 function getBloodTypes(){
@@ -217,19 +241,19 @@ function getImage(fullname){
 function calculateBloodStatus(lastName) {
     console.log(lastName);
     if (pureBloodList.some(elem => elem === lastName) && halfBloodList.some(elem => elem === lastName))  {
-        console.log("surname is in both pure and halfblood lists");
+       
         return "halfblood"
     }
     else if(pureBloodList.some(elem => elem === lastName)){
-        console.log("surname is in pure-blood list");
+        
         return "pureblood"
     }
     else if(halfBloodList.some(elem => elem === lastName)){
-        console.log("surname is in half-blood list");
+        
         return "halfblood"
     }
     else {
-        console.log("surname is in half-blood list");
+        
         return "mudblood"
     }
     
