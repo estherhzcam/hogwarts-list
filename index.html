@@ -8,9 +8,9 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <header><img src="images/hogwarts-crest.png" alt="Hogwarts crest, This file is licensed under the Creative Commons Attribution-Share Alike 4.0 International license."><h1>Hogwarts Students List</h1></header>
+    <header><img src="images/hogwarts-crest.png" alt="Hogwarts crest, This file is licensed under the Creative Commons Attribution-Share Alike 4.0 International license."><h1>Hogwarts Students List</h1><h2>Class of 1991</h2></ha></header>
     <main>
-        <form><input id="search" type="text" name="searchfield"><input id="search-button" type="submit" value="search"></form>
+        <form><input id="search" type="text" name="searchfield"><input id="search-button" type="submit" value="Search"></form>
         <section id="filter"><p>Filter by</p>
             <select name="selectfilter" id="selectfilter">
                 <option value="allstudents">All students</option>
@@ -24,6 +24,16 @@
                 <option value="exp">Expelled students</option>
                 <option value="nonexp">NonExpelled students</option>
               </select>
+        </section>
+        <section id="summary-data">
+                <p class="summary-header">Number of students</p>
+                <div id="data-display"><div class="house-data"><img src="images/gryffindor-icon.png" alt="gryffindor icon"><p id="n-gryffindor">Gryffindor <br><span></span></p></div>
+                <div class="house-data"><img src="images/hufflepuf-icon.png" alt="hufflepuf icon"><p id="n-hufflepuff">Hufflepuff <br><span></span></p></div>
+                <div class="house-data"><img src="images/ravenclaw-icon.png" alt="ravenclaw icon"><p id="n-ravenclaw">Ravenclaw <br><span></span></p></div>
+                <div class="house-data"><img src="images/slytherin-icon.png" alt="slytherin icon"><p id="n-slytherin">Slytherin <br><span></span></p></div>
+                <div class="other-data"><img src="images/enrolled-icon.png" alt="enroled icon"><p id="n-enroled">Enroled <br><span></span></p></div>
+                <div class="other-data"><img src="images/expelled-icon.png" alt="expelled icon"><p id="n-expelled">Expelled <br><span></span></p></div>
+                <div class="other-data"><img src="images/displayed-icon.png" alt="displayed icon"><p id="n-displayed">Displayed <br><span></span></p></div></div>
         </section>
             <table id="displayList">
                 <thead>
