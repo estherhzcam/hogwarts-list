@@ -1,21 +1,8 @@
-body {
-    display: grid; 
-    grid-template-columns: 1fr;
-    grid-template-rows: 1fr 4fr 1fr;
-}
-header {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  justify-content: center;
-    padding: 0;
-    background-color: rgb(7, 62, 134);
-}
+
 
 header img{
-    max-width: 20%;
-    margin: 1em auto;
-    padding:0;
+    max-width: 100%;
+
 }
 
 header h1 {
@@ -31,8 +18,9 @@ header h2 {
 }
 
 main {
-    margin: 3em;
-    font-family:Verdana, Geneva, Tahoma, sans-serif
+    margin: 3em 7em 0 7em;
+    font-family:Verdana, Geneva, Tahoma, sans-serif;
+    
 }
 
 #form {
@@ -86,7 +74,6 @@ main {
 }
 
 #summary-data .summary-header{
-    
     font-weight: bold;
     font-size:medium;
     text-align: left;
@@ -96,15 +83,14 @@ main {
  display: grid;
  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));;
 margin-bottom: 1em;
-max-width: 80%;
-background-color:rgba(209, 206, 206, 0.322);
+background-color:rgba(214, 214, 214, 0.336);
 
 }
 #data-display>* {
     margin: 1em;
-    background-color:rgba(189, 189, 189, 0.322);
+    border: solid 2px #e5b900;
     padding: 1em;
-    border-radius: 5px;
+    border-radius: 10px;
 
 }
 
@@ -127,18 +113,20 @@ background-color:rgba(209, 206, 206, 0.322);
     margin-left: auto;
     margin-right: auto;
     max-width: 40%;
-    background-color: rgba(249, 254, 255, 0.781);
+    background-color:#e5b900;
     padding: 0.5em;
-    border-radius: 5px;
+    border-radius: 25px;
   /*   box-shadow:0px 1px 16px 2px rgba(0,0,0,0.23); */
 }
 
 
 
+
 table{
-    width: 80%;
+
     text-align: left;
     font-size: smaller;
+    width:100%;
 }
 
 .hidden{
@@ -146,12 +134,12 @@ table{
 }
 
 table tr:nth-child(odd) {
-   background-color: rgba(7, 62, 134, 0.452);
-   color:white;
+   background-color: rgba(231, 231, 231, 0.671);
+
 }
 
 th{
-    background-color: rgba(7, 62, 134, 0.521);
+    background-color: rgb(7, 62, 134);
     color:white;
     padding:0.5em;
     text-align: center;
@@ -166,15 +154,15 @@ td{
     cursor: pointer;
   }
 
-  #sorting th.sortby {
+ /*  #sorting th.sortby {
     text-decoration: underline;
-  }
+  } */
   
   #sorting th.sortby[data-sort-direction="asc"]::after{
-    content:" ˄"
+    content:" ↑"
   }
   #sorting th.sortby[data-sort-direction="desc"]::after{
-    content:" ˅"
+    content:" ↓"
   }
 
   [data-field="firstName"]{
@@ -198,19 +186,39 @@ td{
     position:relative;
     top: 2vh;
     left: 2vw;
-    background-color: rgb(7, 62, 134);
-    padding: 2em;
+    padding: 1em 2em;
+    border-radius: 15px;;
     display: grid;
     grid-template-columns: 1fr 2fr;
     grid-template-rows: 3fr auto 1fr;
-    color:white;
+    color:rgb(100, 100, 100);
     font-family:Verdana, Geneva, Tahoma, sans-serif;
     max-width: 50vw;
-    
 }
 
+.slytherin-bk {
+    background-image: url("images/slytherin-background.webp");
+    background-size: cover;
+}
+
+.gryffindor-bk {
+    background-image: url("images/gryffindor-background.webp");
+    background-size: cover;
+}
+
+.hufflepuff-bk {
+    background-image: url("images/hufflepuf-background.webp");
+    background-size: cover;
+}
+
+.ravenclaw-bk {
+    background-image: url("images/ravenclaw-background.webp");
+    background-size: cover;
+}
+
+
 #content-popup #housecrest {
-    max-width: 20%;
+    max-width: 15%;
     grid-column: 1/3;
     grid-row: 1;
     justify-self: center;
@@ -224,7 +232,13 @@ td{
 #content-popup #studentData{
     grid-column: 2/3;
     grid-row: 2;
-    padding-left: 1.5em;
+    padding-left: 1em;
+    font-weight: 550;
+    font-size: smaller;
+}
+
+#content-popup #studentData span{
+  font-weight: 200;
 }
 
 #content-popup #close {
@@ -232,6 +246,8 @@ td{
     grid-row: 1;
     justify-self: end;
     cursor:pointer;
+    color:white;
+    font-weight:600;
 }
 
 #content-popup #buttons {
@@ -241,19 +257,28 @@ td{
     flex-direction: row;
     max-height: 30px;
     justify-content: space-around;
-    
     margin-top: 1em;
     
 }
 
 #content-popup #buttons > * {
-    background-color: rgb(168, 126, 11);  
-    border-radius: 10%;
-    color:white;
-    cursor:pointer;
-    padding: 0.5em;
+    background-color: #e5b900; 
+    border:none;
+    border-radius: 5px; 
     text-align:center;
+    font-family: Arial;
+    padding: 0.5em 1em 0.5em 1em;
+    text-decoration: none;
+    cursor: pointer; 
+    color: rgb(78, 78, 78);
+    box-shadow: inset 0 0 12px 0 #817C7C;
 }
+
+#content-popup #buttons > *:hover {
+    background: #d48205;
+    text-decoration: none;
+    
+ }
 
 .dissabled {
     filter: grayscale(70%);

@@ -35,6 +35,7 @@ const settings = {
 document.addEventListener("DOMContentLoaded", start);
 
 function start() {
+
   getFilters();
   getBloodTypes();
 
@@ -42,9 +43,7 @@ function start() {
   fetch("https://petlatkea.dk/2021/hogwarts/students.json")
     .then((response) => response.json())
     .then((data) => treatJsonData(data))
-    .then(function (data) {
-      displayStudentsList(listOfStudents);
-    });
+    .then(()=> buildList());
 }
 //add event listeners for filters
 
@@ -224,8 +223,9 @@ function getImage(fullname) {
   }
 }
 
+//assigning blood status depending on the last 
 function calculateBloodStatus(lastName) {
-  console.log(lastName);
+
   if (pureBloodList.some((elem) => elem === lastName) && halfBloodList.some((elem) => elem === lastName)) {
     return "halfblood";
   } else if (pureBloodList.some((elem) => elem === lastName)) {
@@ -441,12 +441,28 @@ function showStudent(student) {
 
     if (student.house === "Gryffindor") {
       document.querySelector("#housecrest").src = "images/gryffindor-house-crest.svg";
+      document.querySelector("#content-popup").classList.remove("slytherin-bk");
+      document.querySelector("#content-popup").classList.remove("hufflepuff-bk");
+      document.querySelector("#content-popup").classList.remove("ravenclaw-bk");
+      document.querySelector("#content-popup").classList.add("gryffindor-bk");
     } else if (student.house === "Hufflepuff") {
       document.querySelector("#housecrest").src = "images/hufflepuff-house-crest.svg";
+      document.querySelector("#content-popup").classList.remove("slytherin-bk");
+      document.querySelector("#content-popup").classList.remove("ravenclaw-bk");
+      document.querySelector("#content-popup").classList.remove("gryffindor-bk");
+      document.querySelector("#content-popup").classList.add("hufflepuff-bk");
     } else if (student.house === "Ravenclaw") {
       document.querySelector("#housecrest").src = "images/ravenclaw-house-crest.svg";
+      document.querySelector("#content-popup").classList.remove("slytherin-bk");
+      document.querySelector("#content-popup").classList.remove("hufflepuff-bk");
+      document.querySelector("#content-popup").classList.remove("gryffindor-bk");
+      document.querySelector("#content-popup").classList.add("ravenclaw-bk");
     } else if (student.house === "Slytherin") {
-      document.querySelector("#housecrest").src = "images/slytherin-house-crest.svg";
+      document.querySelector("#housecrest").src = "images/slytherin-house-crest.svg";      
+      document.querySelector("#content-popup").classList.remove("hufflepuff-bk");
+      document.querySelector("#content-popup").classList.remove("ravenclaw-bk");
+      document.querySelector("#content-popup").classList.remove("gryffindor-bk");
+      document.querySelector("#content-popup").classList.add("slytherin-bk")
     }
 
     //display if prefect or inquisitorial
