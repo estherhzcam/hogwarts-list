@@ -32,18 +32,21 @@ const settings = {
   sortDir: "asc",
 };
 
+// stablish a hacked variable as a flag to know if the system has been hacked
+
+let systemHacked;
+
 document.addEventListener("DOMContentLoaded", start);
 
 function start() {
-
   getFilters();
   getBloodTypes();
 
-  //separate this into a different function. Also make start an async function so that 
+  //separate this into a different function. Also make start an async function so that
   fetch("https://petlatkea.dk/2021/hogwarts/students.json")
     .then((response) => response.json())
     .then((data) => treatJsonData(data))
-    .then(()=> buildList());
+    .then(() => buildList());
 }
 //add event listeners for filters
 
@@ -51,6 +54,7 @@ function getFilters() {
   document.querySelector("select").addEventListener("click", selectFilter);
   document.querySelectorAll("[data-action='sort']").forEach((button) => button.addEventListener("click", selectSorting));
   document.querySelector("form").addEventListener("submit", processSearch);
+  document.querySelectorAll(".house-data").forEach((elem)=> elem.addEventListener("click", hackTheSystem))
 }
 
 function selectFilter() {
@@ -109,11 +113,10 @@ function getBloodTypes() {
     .then((response) => response.json())
     .then((data) => treatBloodData(data));
 }
+//redifine the variables pureBloodList and halfBloodList with the actual values
 function treatBloodData(data) {
   pureBloodList = data.pure;
-  console.log("pure blood list", pureBloodList);
   halfBloodList = data.half;
-  console.log("half blood list", halfBloodList);
 }
 
 function treatJsonData(data) {
@@ -223,17 +226,45 @@ function getImage(fullname) {
   }
 }
 
-//assigning blood status depending on the last 
+//assigning blood status depending on the last
 function calculateBloodStatus(lastName) {
+  //Has the system been hacked?
 
-  if (pureBloodList.some((elem) => elem === lastName) && halfBloodList.some((elem) => elem === lastName)) {
-    return "halfblood";
-  } else if (pureBloodList.some((elem) => elem === lastName)) {
-    return "pureblood";
-  } else if (halfBloodList.some((elem) => elem === lastName)) {
-    return "halfblood";
-  } else {
-    return "mudblood";
+  if (systemHacked === true) {
+    if (pureBloodList.some((elem) => elem === lastName) && halfBloodList.some((elem) => elem === lastName)) {
+      console.log("Surname was in both list. Shouldn't but is pureblood. System has been hacked");
+      return "Pureblood";
+    } else if (pureBloodList.some((elem) => elem === lastName)) {
+      console.log("This student should be pureblood but may not. System has been hacked");
+      //calculate the blood status of the original purebloods randomy
+      let bloodStatus = Math.random() * (4 - 1) + 1;
+      console.log(bloodStatus);
+      if (bloodStatus < 2) {
+        return "Pureblood";
+      } else if (bloodStatus >= 2 && bloodStatus < 3) {
+        return "Halfblood";
+      } else if (bloodStatus >= 3 && bloodStatus < 4) {
+        return "Mudblood";
+      }
+    } else if (halfBloodList.some((elem) => elem === lastName)) {
+      console.log("This student shouldn't but is pureblood. System has been hacked");
+      return "Pureblood";
+    } else {
+      console.log("Parent's student are muggles but System has been hacked");
+      return "Pureblood";
+    }
+  } 
+  // if the system has not been hacked we have to calculate the actual blood status
+  else {
+    if (pureBloodList.some((elem) => elem === lastName) && halfBloodList.some((elem) => elem === lastName)) {
+      return "Halfblood";
+    } else if (pureBloodList.some((elem) => elem === lastName)) {
+      return "Pureblood";
+    } else if (halfBloodList.some((elem) => elem === lastName)) {
+      return "Halfblood";
+    } else {
+      return "Mudblood";
+    }
   }
 }
 
@@ -334,12 +365,12 @@ function displayStudentsList(students) {
   //clear the list
   document.querySelector("tbody").innerHTML = "";
   //populate the summary information
-  displaySummaryInfo(students)
+  displaySummaryInfo(students);
   //call the loop to display student information
   students.forEach(showStudent);
 }
 
-function displaySummaryInfo(students){
+function displaySummaryInfo(students) {
   let numberOfGryffindor = listOfStudents.filter(isGriffindor).length;
   let numberOfHufflepuf = listOfStudents.filter(isHufflepuff).length;
   let numberOfRavenclaw = listOfStudents.filter(isRavenclaw).length;
@@ -347,7 +378,7 @@ function displaySummaryInfo(students){
   let numberOfExpelled = listOfStudents.filter(isExpelled).length;
   let numberOfEnrolled = listOfStudents.filter(isNonExpelled).length;
   let numberOfDisplayed = students.length;
-  
+
   document.querySelector("#n-gryffindor span").textContent = numberOfGryffindor;
   document.querySelector("#n-hufflepuff span").textContent = numberOfHufflepuf;
   document.querySelector("#n-ravenclaw span").textContent = numberOfRavenclaw;
@@ -355,7 +386,6 @@ function displaySummaryInfo(students){
   document.querySelector("#n-enroled span").textContent = numberOfEnrolled;
   document.querySelector("#n-expelled span").textContent = numberOfExpelled;
   document.querySelector("#n-displayed span").textContent = numberOfDisplayed;
-
 }
 
 function showStudent(student) {
@@ -458,11 +488,11 @@ function showStudent(student) {
       document.querySelector("#content-popup").classList.remove("gryffindor-bk");
       document.querySelector("#content-popup").classList.add("ravenclaw-bk");
     } else if (student.house === "Slytherin") {
-      document.querySelector("#housecrest").src = "images/slytherin-house-crest.svg";      
+      document.querySelector("#housecrest").src = "images/slytherin-house-crest.svg";
       document.querySelector("#content-popup").classList.remove("hufflepuff-bk");
       document.querySelector("#content-popup").classList.remove("ravenclaw-bk");
       document.querySelector("#content-popup").classList.remove("gryffindor-bk");
-      document.querySelector("#content-popup").classList.add("slytherin-bk")
+      document.querySelector("#content-popup").classList.add("slytherin-bk");
     }
 
     //display if prefect or inquisitorial
@@ -497,11 +527,16 @@ function showStudent(student) {
     function expellStudent() {
       console.log("expellStudent");
       if (student.expelled === false) {
-        student.expelled = true;
-        document.querySelector("#expell").removeEventListener("click", expellStudent);
-        document.querySelector("#expell").classList.add("dissabled");
-        document.querySelector("p#expelled span").textContent = "Yes";
-        //add inactive button class
+        if (student.firstName != "Esther") {
+          student.expelled = true;
+          document.querySelector("#expell").removeEventListener("click", expellStudent);
+          document.querySelector("#expell").classList.add("dissabled");
+          document.querySelector("p#expelled span").textContent = "Yes";
+        } else {
+          document.querySelector("#expell").removeEventListener("click", expellStudent);
+          document.querySelector("#expell").classList.add("dissabled");
+          document.querySelector("#warning-message p").textContent = "(!) Sorry, this student cannot be expelled.";
+        }
       }
     }
 
@@ -544,15 +579,21 @@ function showStudent(student) {
     }
 
     function appointInquisitorial() {
-      console.log("appointInquisitorial");
+      // has the system been hacked?
       if (student.inquisitorial === false) {
-        if (student.bloodStatus === "pureblood") {
+        if (student.bloodStatus === "Pureblood") {
           student.inquisitorial = true;
           document.querySelector("p#inquisitorial span").textContent = "Yes";
+          if (systemHacked === true){
+          setTimeout(resetInquisitorial, 1000);
+        }
         } else {
           if (student.house === "Slytherin") {
             student.inquisitorial = true;
             document.querySelector("p#inquisitorial span").textContent = "Yes";
+            if (systemHacked === true){
+              setTimeout(resetInquisitorial, 1000);
+            }
           } else {
             document.querySelector("#appoint-inq-squad").classList.add("dissabled");
             document.querySelector("#warning-message p").textContent = "(!) This student is not a pureblood and cannot be part of the Inquisitorial Squad";
@@ -563,19 +604,59 @@ function showStudent(student) {
         document.querySelector("p#inquisitorial span").textContent = "No";
       }
     }
+    function resetInquisitorial (){
+      student.inquisitorial = false;
+      document.querySelector("p#inquisitorial span").textContent = "No";      
+      document.querySelector("#warning-message p").textContent = "(!) System has been hacked. This student cannot be part of the Inquisitorial Squad";
+    }
     function closePopUp() {
+      //hide the pop up
       document.querySelector("#pop-up").classList.remove("show");
       document.querySelector("#pop-up").classList.add("hidden");
+      // remove the event listeners in the pop up
       document.querySelector("#content-popup #close").removeEventListener("click", closePopUp);
       document.querySelector("#makeprefect").removeEventListener("click", makePrefect);
+      document.querySelector("#appoint-inq-squad").removeEventListener("click", appointInquisitorial);
+      document.querySelector("#expell").removeEventListener("click", expellStudent);
+      // reset the buttons that have been marked as dissabled
       document.querySelector("#makeprefect").classList.remove("dissabled");
       document.querySelector("#appoint-inq-squad").classList.remove("dissabled");
-      document.querySelector("#warning-message p").textContent = "";
       document.querySelector("#expell").classList.remove("dissabled");
-      document.querySelector("#expell").removeEventListener("click", expellStudent);
-      document.querySelector("#appoint-inq-squad").removeEventListener("click", appointInquisitorial);
+      //remove warning messages
+      document.querySelector("#warning-message p").textContent = "";     
+      
+      
 
       buildList();
     }
   }
+}
+
+function hackTheSystem() {
+  if (systemHacked != true){
+  //letting the system know it has been hacked
+  systemHacked = true;
+  //coping the student object and setting my student information
+  const mySelf = Object.create(Student);
+  mySelf.firstName = "Esther";
+  mySelf.lastName = "Hernández";
+  mySelf.middleName = "María";
+  mySelf.nickName = "N/A";
+  mySelf.image = null;
+  mySelf.house = "Ravenclaw";
+  mySelf.prefect = false;
+  mySelf.quidditch = true;
+  mySelf.inquisitorial = false;
+  mySelf.bloodStatus = "Halfblood";
+  mySelf.expelled = false;
+  //Once mySelf has been created, we have to push it into the array of students
+  listOfStudents.push(mySelf);
+  reCalculateBloodStatus().then(buildList());
+}
+}
+
+async function reCalculateBloodStatus() {
+  listOfStudents.forEach((student) => {
+    student.bloodStatus = calculateBloodStatus(student.lastName);
+  });
 }
