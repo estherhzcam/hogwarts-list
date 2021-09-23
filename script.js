@@ -18,6 +18,8 @@ const Student = {
 
 // setting prefects list to host a list of students being prefects at any given time
 const prefectsList = [];
+// const expelled students list to host the list of students expelled
+const expelledList = [];
 
 // setting array for students included in the search
 let searchOfStudents = [];
@@ -319,7 +321,7 @@ function filterList(listOfStudents) {
     filteredList = listOfStudents.filter(isInquisitorial);
   } else if (settings.filter === "exp") {
     console.log(settings.filter);
-    filteredList = listOfStudents.filter(isExpelled);
+    filteredList = expelledList;
   } else if (settings.filter === "nonexp") {
     console.log(settings.filter);
     filteredList = listOfStudents.filter(isNonExpelled);
@@ -375,7 +377,7 @@ function displaySummaryInfo(students) {
   let numberOfHufflepuf = listOfStudents.filter(isHufflepuff).length;
   let numberOfRavenclaw = listOfStudents.filter(isRavenclaw).length;
   let numberOfSlytherin = listOfStudents.filter(isSlytherin).length;
-  let numberOfExpelled = listOfStudents.filter(isExpelled).length;
+  let numberOfExpelled = expelledList.length;
   let numberOfEnrolled = listOfStudents.filter(isNonExpelled).length;
   let numberOfDisplayed = students.length;
 
@@ -527,6 +529,7 @@ function showStudent(student) {
     function expellStudent() {
       console.log("expellStudent");
       if (student.expelled === false) {
+<<<<<<< HEAD
         if (student.firstName != "Esther") {
           student.expelled = true;
           document.querySelector("#expell").removeEventListener("click", expellStudent);
@@ -537,6 +540,18 @@ function showStudent(student) {
           document.querySelector("#expell").classList.add("dissabled");
           document.querySelector("#warning-message p").textContent = "(!) Sorry, this student cannot be expelled.";
         }
+=======
+        let studentPosition = listOfStudents.indexOf(student)
+        student.expelled = true;
+        document.querySelector("#expell").removeEventListener("click", expellStudent);
+        document.querySelector("#expell").classList.add("dissabled");
+        document.querySelector("p#expelled span").textContent = "Yes";
+        expelledList.push(student);
+        listOfStudents.splice(studentPosition,1);
+        console.log("this is the list of expelled students", expelledList);
+        console.log("this is the list of nonexpelled students", listOfStudents)
+        //add inactive button class
+>>>>>>> redo-expelling
       }
     }
 
