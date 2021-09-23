@@ -43,12 +43,29 @@ function start() {
   getBloodTypes();
 
   //separate this into a different function. Also make start an async function so that
-  fetch("https://petlatkea.dk/2021/hogwarts/students.json")
+  
+}
+function getBloodTypes() {
+  fetch("https://petlatkea.dk/2021/hogwarts/families.json")
     .then((response) => response.json())
-    .then((data) => treatJsonData(data))
-    .then(() => buildList());
+    .then((data) => treatBloodData(data))
+ .then (getStudents())
+}
+//redifine the variables pureBloodList and halfBloodList with the actual values
+function treatBloodData(data) {
+  pureBloodList = data.pure;
+  halfBloodList = data.half;
+}
+
+function getStudents(){
+  //treatBloodData(blooTypeData)
+  fetch("https://petlatkea.dk/2021/hogwarts/students.json")
+  .then((response) => response.json())
+  .then((data) => treatJsonData(data))
+  .then(() => buildList());
 }
 //add event listeners for filters
+
 
 function getFilters() {
   document.querySelector("select").addEventListener("click", selectFilter);
@@ -108,16 +125,7 @@ function processSearch(e) {
   displayStudentsList(searchOfStudents);
 }
 
-function getBloodTypes() {
-  fetch("https://petlatkea.dk/2021/hogwarts/families.json")
-    .then((response) => response.json())
-    .then((data) => treatBloodData(data));
-}
-//redifine the variables pureBloodList and halfBloodList with the actual values
-function treatBloodData(data) {
-  pureBloodList = data.pure;
-  halfBloodList = data.half;
-}
+
 
 function treatJsonData(data) {
   data.forEach((stud) => {
