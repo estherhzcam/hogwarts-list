@@ -18,8 +18,9 @@ const Student = {
 
 // setting prefects list to host a list of students being prefects at any given time
 const prefectsList = [];
-// const expelled students list to host the list of students expelled
-const expelledList = [];
+// setting list of expelled students
+
+const expelledStudents = [];
 
 // setting array for students included in the search
 let searchOfStudents = [];
@@ -43,8 +44,21 @@ document.addEventListener("DOMContentLoaded", start);
 function start() {
   getFilters();
   getBloodTypes();
+}
 
-  //separate this into a different function. Also make start an async function so that
+function getBloodTypes() {
+  fetch("https://petlatkea.dk/2021/hogwarts/families.json")
+    .then((response) => response.json())
+    .then((data) => treatBloodData(data))
+    .then(getStudents());
+}
+//redifine the variables pureBloodList and halfBloodList with the actual values
+function treatBloodData(data) {
+  pureBloodList = data.pure;
+  halfBloodList = data.half;
+}
+
+function getStudents() {
   fetch("https://petlatkea.dk/2021/hogwarts/students.json")
     .then((response) => response.json())
     .then((data) => treatJsonData(data))
@@ -56,7 +70,7 @@ function getFilters() {
   document.querySelector("select").addEventListener("click", selectFilter);
   document.querySelectorAll("[data-action='sort']").forEach((button) => button.addEventListener("click", selectSorting));
   document.querySelector("form").addEventListener("submit", processSearch);
-  document.querySelectorAll(".house-data").forEach((elem)=> elem.addEventListener("click", hackTheSystem))
+  document.querySelectorAll(".house-data").forEach((elem) => elem.addEventListener("click", hackTheSystem));
 }
 
 function selectFilter() {
@@ -108,17 +122,6 @@ function processSearch(e) {
     }
   });
   displayStudentsList(searchOfStudents);
-}
-
-function getBloodTypes() {
-  fetch("https://petlatkea.dk/2021/hogwarts/families.json")
-    .then((response) => response.json())
-    .then((data) => treatBloodData(data));
-}
-//redifine the variables pureBloodList and halfBloodList with the actual values
-function treatBloodData(data) {
-  pureBloodList = data.pure;
-  halfBloodList = data.half;
 }
 
 function treatJsonData(data) {
@@ -255,7 +258,7 @@ function calculateBloodStatus(lastName) {
       console.log("Parent's student are muggles but System has been hacked");
       return "Pureblood";
     }
-  } 
+  }
   // if the system has not been hacked we have to calculate the actual blood status
   else {
     if (pureBloodList.some((elem) => elem === lastName) && halfBloodList.some((elem) => elem === lastName)) {
@@ -321,10 +324,10 @@ function filterList(listOfStudents) {
     filteredList = listOfStudents.filter(isInquisitorial);
   } else if (settings.filter === "exp") {
     console.log(settings.filter);
-    filteredList = expelledList;
+    filteredList = expelledStudents;
   } else if (settings.filter === "nonexp") {
     console.log(settings.filter);
-    filteredList = listOfStudents.filter(isNonExpelled);
+    filteredList = listOfStudents;
   } else if (settings.filter === "allstudents") {
     console.log(settings.filter);
   }
@@ -377,7 +380,7 @@ function displaySummaryInfo(students) {
   let numberOfHufflepuf = listOfStudents.filter(isHufflepuff).length;
   let numberOfRavenclaw = listOfStudents.filter(isRavenclaw).length;
   let numberOfSlytherin = listOfStudents.filter(isSlytherin).length;
-  let numberOfExpelled = expelledList.length;
+  let numberOfExpelled = expelledStudents.length;
   let numberOfEnrolled = listOfStudents.filter(isNonExpelled).length;
   let numberOfDisplayed = students.length;
 
@@ -497,21 +500,39 @@ function showStudent(student) {
       document.querySelector("#content-popup").classList.add("slytherin-bk");
     }
 
-    //display if prefect or inquisitorial
+    //display if prefect or inquisitorial.
+
     if (student.prefect === true) {
-      document.querySelector("p#prefect span").textContent = "Yes";
+      // if the student has been expelled, we remove his prefect status inmediately and remove him from the list of prefects
+      if (student.expelled != true) {
+        document.querySelector("p#prefect span").textContent = "Yes";
+      } else {
+        document.querySelector("p#prefect span").textContent = "No";
+        student.prefect = false;
+        let studentPosition = prefectsList.indexOf(student);
+        prefectsList.splice(studentPosition, 1);
+      }
     } else {
       document.querySelector("p#prefect span").textContent = "No";
     }
+
     if (student.inquisitorial === true) {
-      document.querySelector("p#inquisitorial span").textContent = "Yes";
+      // if the student has been expelled, we remove him from the inquisitorial squad
+      if (student.expelled != true) {
+        document.querySelector("p#inquisitorial span").textContent = "Yes";
+      } else {
+        document.querySelector("p#inquisitorial span").textContent = "No";
+        student.inquisitorial = false;
+      }
     } else {
       document.querySelector("p#inquisitorial span").textContent = "No";
     }
-
     if (student.expelled === true) {
       document.querySelector("#expell").classList.add("dissabled");
+      document.querySelector("#makeprefect").classList.add("dissabled");
+      document.querySelector("#appoint-inq-squad").classList.add("dissabled");
       document.querySelector("p#expelled span").textContent = "Yes";
+      document.querySelector("#warning-message p").textContent = "(!) This student has been expelled and can't be made prefect nor appointed to the inquisitorial squad.";
     } else {
       document.querySelector("p#expelled span").textContent = "No";
     }
@@ -521,37 +542,28 @@ function showStudent(student) {
     //Add event listeners to buttons in the popUp
 
     document.querySelector("#content-popup #close").addEventListener("click", closePopUp);
-    document.querySelector("#expell").addEventListener("click", expellStudent);
-    document.querySelector("#makeprefect").addEventListener("click", makePrefect);
-    document.querySelector("#appoint-inq-squad").addEventListener("click", appointInquisitorial);
+    //allow the event listeners only id the students are not expelled
+    if (student.expelled != true) {
+      document.querySelector("#expell").addEventListener("click", expellStudent);
+      document.querySelector("#makeprefect").addEventListener("click", makePrefect);
+      document.querySelector("#appoint-inq-squad").addEventListener("click", appointInquisitorial);
+    }
 
     //Expell student and make prefect functions
     function expellStudent() {
       console.log("expellStudent");
-      if (student.expelled === false) {
-<<<<<<< HEAD
-        if (student.firstName != "Esther") {
-          student.expelled = true;
-          document.querySelector("#expell").removeEventListener("click", expellStudent);
-          document.querySelector("#expell").classList.add("dissabled");
-          document.querySelector("p#expelled span").textContent = "Yes";
-        } else {
-          document.querySelector("#expell").removeEventListener("click", expellStudent);
-          document.querySelector("#expell").classList.add("dissabled");
-          document.querySelector("#warning-message p").textContent = "(!) Sorry, this student cannot be expelled.";
-        }
-=======
-        let studentPosition = listOfStudents.indexOf(student)
+      if (student.firstName != "Esther") {
+        let studentPosition = listOfStudents.indexOf(student);
         student.expelled = true;
         document.querySelector("#expell").removeEventListener("click", expellStudent);
         document.querySelector("#expell").classList.add("dissabled");
         document.querySelector("p#expelled span").textContent = "Yes";
-        expelledList.push(student);
-        listOfStudents.splice(studentPosition,1);
-        console.log("this is the list of expelled students", expelledList);
-        console.log("this is the list of nonexpelled students", listOfStudents)
-        //add inactive button class
->>>>>>> redo-expelling
+        expelledStudents.push(student);
+        listOfStudents.splice(studentPosition, 1);
+      } else {
+        document.querySelector("#expell").removeEventListener("click", expellStudent);
+        document.querySelector("#expell").classList.add("dissabled");
+        document.querySelector("#warning-message p").textContent = "(!) Sorry, this student cannot be expelled.";
       }
     }
 
@@ -595,33 +607,35 @@ function showStudent(student) {
 
     function appointInquisitorial() {
       // has the system been hacked?
-      if (student.inquisitorial === false) {
-        if (student.bloodStatus === "Pureblood") {
-          student.inquisitorial = true;
-          document.querySelector("p#inquisitorial span").textContent = "Yes";
-          if (systemHacked === true){
-          setTimeout(resetInquisitorial, 1000);
-        }
-        } else {
-          if (student.house === "Slytherin") {
+      if (student.expelled != true) {
+        if (student.inquisitorial === false) {
+          if (student.bloodStatus === "Pureblood") {
             student.inquisitorial = true;
             document.querySelector("p#inquisitorial span").textContent = "Yes";
-            if (systemHacked === true){
+            if (systemHacked === true) {
               setTimeout(resetInquisitorial, 1000);
             }
           } else {
-            document.querySelector("#appoint-inq-squad").classList.add("dissabled");
-            document.querySelector("#warning-message p").textContent = "(!) This student is not a pureblood and cannot be part of the Inquisitorial Squad";
+            if (student.house === "Slytherin") {
+              student.inquisitorial = true;
+              document.querySelector("p#inquisitorial span").textContent = "Yes";
+              if (systemHacked === true) {
+                setTimeout(resetInquisitorial, 1000);
+              }
+            } else {
+              document.querySelector("#appoint-inq-squad").classList.add("dissabled");
+              document.querySelector("#warning-message p").textContent = "(!) This student is not a pureblood and cannot be part of the Inquisitorial Squad";
+            }
           }
+        } else {
+          student.inquisitorial = false;
+          document.querySelector("p#inquisitorial span").textContent = "No";
         }
-      } else {
-        student.inquisitorial = false;
-        document.querySelector("p#inquisitorial span").textContent = "No";
       }
     }
-    function resetInquisitorial (){
+    function resetInquisitorial() {
       student.inquisitorial = false;
-      document.querySelector("p#inquisitorial span").textContent = "No";      
+      document.querySelector("p#inquisitorial span").textContent = "No";
       document.querySelector("#warning-message p").textContent = "(!) System has been hacked. This student cannot be part of the Inquisitorial Squad";
     }
     function closePopUp() {
@@ -638,9 +652,7 @@ function showStudent(student) {
       document.querySelector("#appoint-inq-squad").classList.remove("dissabled");
       document.querySelector("#expell").classList.remove("dissabled");
       //remove warning messages
-      document.querySelector("#warning-message p").textContent = "";     
-      
-      
+      document.querySelector("#warning-message p").textContent = "";
 
       buildList();
     }
@@ -648,26 +660,26 @@ function showStudent(student) {
 }
 
 function hackTheSystem() {
-  if (systemHacked != true){
-  //letting the system know it has been hacked
-  systemHacked = true;
-  //coping the student object and setting my student information
-  const mySelf = Object.create(Student);
-  mySelf.firstName = "Esther";
-  mySelf.lastName = "Hernández";
-  mySelf.middleName = "María";
-  mySelf.nickName = "N/A";
-  mySelf.image = null;
-  mySelf.house = "Ravenclaw";
-  mySelf.prefect = false;
-  mySelf.quidditch = true;
-  mySelf.inquisitorial = false;
-  mySelf.bloodStatus = "Halfblood";
-  mySelf.expelled = false;
-  //Once mySelf has been created, we have to push it into the array of students
-  listOfStudents.push(mySelf);
-  reCalculateBloodStatus().then(buildList());
-}
+  if (systemHacked != true) {
+    //letting the system know it has been hacked
+    systemHacked = true;
+    //coping the student object and setting my student information
+    const mySelf = Object.create(Student);
+    mySelf.firstName = "Esther";
+    mySelf.lastName = "Hernández";
+    mySelf.middleName = "María";
+    mySelf.nickName = "N/A";
+    mySelf.image = null;
+    mySelf.house = "Ravenclaw";
+    mySelf.prefect = false;
+    mySelf.quidditch = true;
+    mySelf.inquisitorial = false;
+    mySelf.bloodStatus = "Halfblood";
+    mySelf.expelled = false;
+    //Once mySelf has been created, we have to push it into the array of students
+    listOfStudents.push(mySelf);
+    reCalculateBloodStatus().then(buildList());
+  }
 }
 
 async function reCalculateBloodStatus() {

@@ -269,7 +269,6 @@ td{
     font-family: Arial;
     padding: 0.5em 1em 0.5em 1em;
     text-decoration: none;
-    cursor: pointer; 
     color: rgb(78, 78, 78);
     box-shadow: inset 0 0 12px 0 #817C7C;
 }
@@ -281,6 +280,12 @@ td{
  }
 
 .dissabled {
+    filter: grayscale(70%);
+    cursor: not-allowed;
+}
+
+.dissabled:hover{
+    background-color: #e5b900; 
     filter: grayscale(70%);
     cursor: none;
 }
