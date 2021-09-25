@@ -170,7 +170,7 @@ function getLastName(fullname) {
     let correctLastName = lastName.substring(0, 1).toUpperCase() + lastName.substring(1).toLowerCase();
     return correctLastName;
   } else {
-    return null;
+    return "";
   }
 }
 function getMiddleName(fullname) {
@@ -394,7 +394,12 @@ function displaySummaryInfo(students) {
 function showStudent(student) {
   //copy template, populate with student data, append to the html
   const clone = document.querySelector("template").content.cloneNode(true);
+  if (student.image != null){
 
+    clone.querySelector("[data-field='image'] img").src = student.image
+  } else{
+    clone.querySelector("[data-field='image'] img").src = "images/empty_image.png"
+  }
   clone.querySelector("[data-field='firstName']").textContent = student.firstName;
   // cleaning middleName, lastName, nickName to display or not information
   if (student.middleName != null) {
@@ -416,7 +421,7 @@ function showStudent(student) {
   clone.querySelector("[data-field='house']").textContent = student.house;
 
   // responsabilities display, depending on if the student has any and how many. If statements with all the variations
-
+  
   if (student.prefect === true && student.quidditch === true && student.inquisitorial === true) {
     clone.querySelector("[data-field='responsabilites']").textContent = "Prefect, Quidditch team member, Inquisitorial squad";
   } else if (student.prefect === true && student.quidditch === true) {
@@ -438,6 +443,7 @@ function showStudent(student) {
   // add event listener to display the pop up
 
   clone.querySelector("[data-field='firstName']").addEventListener("click", showPopUp);
+  clone.querySelector("[data-field='image']").addEventListener("click", showPopUp);
 
   //append the template clone
 
@@ -666,7 +672,7 @@ function hackTheSystem() {
     mySelf.firstName = "Esther";
     mySelf.lastName = "Hernández";
     mySelf.middleName = "María";
-    mySelf.nickName = "N/A";
+    mySelf.nickName = "";
     mySelf.image = null;
     mySelf.house = "Ravenclaw";
     mySelf.prefect = false;
