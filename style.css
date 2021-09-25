@@ -1,4 +1,6 @@
-
+body {
+    font-family:Verdana, Geneva, Tahoma, sans-serif;
+}
 
 header img{
     max-width: 100%;
@@ -19,7 +21,7 @@ header h2 {
 
 main {
     margin: 3em 7em 0 7em;
-    font-family:Verdana, Geneva, Tahoma, sans-serif;
+    
     
 }
 
@@ -150,7 +152,7 @@ td{
     text-align: center;
 }
 
-[data-action] {
+[data-action="sort"] {
     cursor: pointer;
   }
 
@@ -294,4 +296,29 @@ td{
     grid-column: 1/3;
     grid-row: 4;
     font-size: small;
+}
+
+footer{
+    background: rgb(7, 62, 134);
+    color:white;
+    padding: 3em 7em;
+    margin: 3em 0 0 0;
+    font-size:x-small
+}
+
+@media screen and (max-width:800px) {
+    body {
+        margin: 0;
+    }
+
+    main{
+        margin: 1em 1em;
+        overflow:scroll;
+    }
+
+    #selectfilter{
+        width: 70%;
+    }
+
+ 
 }

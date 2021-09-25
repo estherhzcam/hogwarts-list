@@ -46,26 +46,6 @@ function start() {
   getBloodTypes();
 }
 
-function getBloodTypes() {
-  fetch("https://petlatkea.dk/2021/hogwarts/families.json")
-    .then((response) => response.json())
-    .then((data) => treatBloodData(data))
-    .then(getStudents());
-}
-//redifine the variables pureBloodList and halfBloodList with the actual values
-function treatBloodData(data) {
-  pureBloodList = data.pure;
-  halfBloodList = data.half;
-}
-
-function getStudents() {
-  fetch("https://petlatkea.dk/2021/hogwarts/students.json")
-    .then((response) => response.json())
-    .then((data) => treatJsonData(data))
-    .then(() => buildList());
-}
-//add event listeners for filters
-
 function getFilters() {
   document.querySelector("select").addEventListener("click", selectFilter);
   document.querySelectorAll("[data-action='sort']").forEach((button) => button.addEventListener("click", selectSorting));
@@ -88,13 +68,13 @@ function selectSorting(event) {
   oldElement.classList.remove("sortby");
   // indicate active sorting
   event.target.classList.add("sortby");
-  console.log("firts sort dir is ", sortDir);
+ 
   if (sortDir === "asc") {
     event.target.dataset.sortDirection = "desc";
   } else if (sortDir === "desc") {
     event.target.dataset.sortDirection = "asc";
   }
-  console.log("then sort dir is ", sortDir);
+ 
   setSort(sortBy, sortDir);
 }
 
@@ -106,7 +86,6 @@ function setSort(sortBy, sortDir) {
 
 function processSearch(e) {
   e.preventDefault();
-  searchOfStudents = [];
   let search = document.querySelector("input[name=searchfield]").value.toLowerCase();
   listOfStudents.forEach((student) => {
     let studentName = student.firstName.toLowerCase();
@@ -123,6 +102,26 @@ function processSearch(e) {
   });
   displayStudentsList(searchOfStudents);
 }
+
+function getBloodTypes() {
+  fetch("https://petlatkea.dk/2021/hogwarts/families.json")
+    .then((response) => response.json())
+    .then((data) => treatBloodData(data))
+    .then(getStudents());
+}
+//redifine the variables pureBloodList and halfBloodList with the actual values
+function treatBloodData(data) {
+  pureBloodList = data.pure;
+  halfBloodList = data.half;
+}
+
+function getStudents() {
+  fetch("https://petlatkea.dk/2021/hogwarts/students.json")
+    .then((response) => response.json())
+    .then((data) => treatJsonData(data))
+    .then(() => buildList());
+}
+//add event listeners for filters
 
 function treatJsonData(data) {
   data.forEach((stud) => {
@@ -279,26 +278,6 @@ function buildList() {
   displayStudentsList(sortedList);
 }
 
-function sortList(currentList) {
-  let direction = 1;
-  let sortedList = currentList;
-  if (settings.sortDir === "desc") {
-    direction = -1;
-  } else {
-    direction = 1;
-  }
-  sortedList = sortedList.sort(sortByParam);
-
-  function sortByParam(studentA, studentB) {
-    if (studentA[settings.sortBy] < studentB[settings.sortBy]) {
-      return -1 * direction;
-    } else {
-      return 1 * direction;
-    }
-  }
-  return sortedList;
-}
-
 function filterList(listOfStudents) {
   let filteredList = listOfStudents;
   //depending on the filter, we refine the variable filteredList using the isFilter functions, nested inside the if statements to assure closure
@@ -334,7 +313,6 @@ function filterList(listOfStudents) {
 
   return filteredList;
 }
-
 // is functions to filter
 function isGriffindor(student) {
   return student.house === "Gryffindor";
@@ -364,6 +342,26 @@ function isExpelled(student) {
 }
 function isNonExpelled(student) {
   return student.expelled === false;
+}
+
+function sortList(currentList) {
+  let direction = 1;
+  let sortedList = currentList;
+  if (settings.sortDir === "desc") {
+    direction = -1;
+  } else {
+    direction = 1;
+  }
+  sortedList = sortedList.sort(sortByParam);
+
+  function sortByParam(studentA, studentB) {
+    if (studentA[settings.sortBy] < studentB[settings.sortBy]) {
+      return -1 * direction;
+    } else {
+      return 1 * direction;
+    }
+  }
+  return sortedList;
 }
 
 function displayStudentsList(students) {
@@ -402,17 +400,17 @@ function showStudent(student) {
   if (student.middleName != null) {
     clone.querySelector("[data-field='middleName']").textContent = student.middleName;
   } else {
-    clone.querySelector("[data-field='middleName']").textContent = "N/A";
+    clone.querySelector("[data-field='middleName']").textContent = "";
   }
   if (student.lastName != null) {
     clone.querySelector("[data-field='lastName']").textContent = student.lastName;
   } else {
-    clone.querySelector("[data-field='lastName']").textContent = "N/A";
+    clone.querySelector("[data-field='lastName']").textContent = "";
   }
   if (student.nickName != null) {
     clone.querySelector("[data-field='nickName']").textContent = student.nickName;
   } else {
-    clone.querySelector("[data-field='nickName']").textContent = "N/A";
+    clone.querySelector("[data-field='nickName']").textContent = "";
   }
 
   clone.querySelector("[data-field='house']").textContent = student.house;
